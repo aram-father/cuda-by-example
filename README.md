@@ -4,7 +4,7 @@
 
 **Last update:** 2021-03-09(TUE)
 
-## What does this repositpry do?
+## What does this repository do?
 
 This repository implements the examples illustrated in [CUDA By Example](https://developer.nvidia.com/cuda-example).
 
