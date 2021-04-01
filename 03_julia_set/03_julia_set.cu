@@ -18,7 +18,7 @@ int main(int argc, char** argv)
 {
   if (argc != 3)
   {
-    std::cout << "Usage: ./main dim_x dim_y" << std::endl;
+    std::cout << "Usage: ./03_julia_set dim_x dim_y" << std::endl;
     exit(-1);
   }
 
