@@ -17,16 +17,16 @@
 class Complex
 {
 private:
-    float real_;
-    float imaginary_;
+  float real_;
+  float imaginary_;
 public:
-    __device__ Complex(const float real, const float imaginary);
-    
-    __device__ Complex operator*(const Complex& rhs) const;
-    __device__ Complex operator+(const Complex& rhs) const;
+  __device__ Complex(const float real, const float imaginary);
+  
+  __device__ Complex operator*(const Complex& rhs) const;
+  __device__ Complex operator+(const Complex& rhs) const;
 
-    __device__ float GetMagnitudeSquare(void) const;
-    __device__ bool DoesJuliaExpansionConverge(const std::size_t length=200, const float threshold=1000.0) const;
+  __device__ float GetMagnitudeSquare(void) const;
+  __device__ bool DoesJuliaExpansionConverge(const std::size_t length=200, const float threshold=1000.0) const;
 };
 
 __global__ void kernel(std::uint8_t* p_image);
