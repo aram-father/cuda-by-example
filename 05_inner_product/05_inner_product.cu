@@ -51,13 +51,71 @@ int main(int argc, char** argv)
   std::cout << "CPU Result: "<< cpu_result << std::endl;
   std::cout << "CPU Execution Time: "<< cpu_elapsed.count() << " msec" << std::endl;
 
-  auto gpu_s = std::chrono::system_clock::now();
-  float gpu_result = InnerProductGPU(length, vector_a.get(), vector_b.get());
-  auto gpu_e = std::chrono::system_clock::now();
-  auto gpu_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(gpu_e - gpu_s);
+  cudaError_t gpu_error;
+  cudaEvent_t gpu_s, gpu_e;
+
+  gpu_error = cudaEventCreate(&gpu_s);
+  if (gpu_error)
+  {
+    std::cout << cudaGetErrorString(gpu_error) << std::endl;
+    exit(-1);
+  }
+
+  gpu_error = cudaEventCreate(&gpu_e);
+  if (gpu_error)
+  {
+    std::cout << cudaGetErrorString(gpu_error) << std::endl;
+    exit(-1);
+  }
+
+  gpu_error = cudaEventRecord(gpu_s, 0);
+  if (gpu_error)
+  {
+    std::cout << cudaGetErrorString(gpu_error) << std::endl;
+    exit(-1);
+  }
   
+  float gpu_result = InnerProductGPU(length, vector_a.get(), vector_b.get());
+  
+  gpu_error = cudaEventRecord(gpu_e, 0);
+  if (gpu_error)
+  {
+    std::cout << cudaGetErrorString(gpu_error) << std::endl;
+    exit(-1);
+  }
+
+  gpu_error = cudaEventSynchronize(gpu_e);
+  if (gpu_error)
+  {
+    std::cout << cudaGetErrorString(gpu_error) << std::endl;
+    exit(-1);
+  }
+
+  float gpu_elapsed;
+
+  gpu_error = cudaEventElapsedTime(&gpu_elapsed, gpu_s, gpu_e);
+  if (gpu_error)
+  {
+    std::cout << cudaGetErrorString(gpu_error) << std::endl;
+    exit(-1);
+  }
+
+  gpu_error = cudaEventDestroy(gpu_s);
+  if (gpu_error)
+  {
+    std::cout << cudaGetErrorString(gpu_error) << std::endl;
+    exit(-1);
+  }
+
+  gpu_error = cudaEventDestroy(gpu_e);
+  if (gpu_error)
+  {
+    std::cout << cudaGetErrorString(gpu_error) << std::endl;
+    exit(-1);
+  }
+ 
   std::cout << "GPU Result: "<< gpu_result << std::endl;
-  std::cout << "GPU Execution Time: "<< gpu_elapsed.count() << " msec" << std::endl;
+  std::cout << "GPU Execution Time: "<< gpu_elapsed << " msec" << std::endl;
 
   return 0;
 }
